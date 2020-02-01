@@ -1,2 +1,2 @@
-# disaster-relief
-An online game to help people make a plan to prepare for hurricanes
+# Disaste Prep Game
+An online game to help people make a plan to prepare for hurricanes, earthquakes, and other natural disasters
