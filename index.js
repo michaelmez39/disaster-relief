@@ -117,10 +117,10 @@ const txts = [
 
 const board_maize = [
     [1, 1, 1, 1, 1, 1, 1, 1],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 1, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1],
 
 ];
@@ -159,8 +159,8 @@ app.loader.add(txts).load((loader, resources) => {
     cat.y = app.renderer.height / 2;
     cat.vx = 0;
     cat.vy = 0;
-    cat.width = cat.width / 5;
-    cat.height = cat.height / 5;
+    cat.width = cat.width /2;
+    cat.height = cat.height / 2;
 
     background.width = app.renderer.width;
     background.height = app.renderer.height;
@@ -176,6 +176,14 @@ app.loader.add(txts).load((loader, resources) => {
 
 
     //Capture the keyboard arrow keys
+    function hitWall() {
+        for (brick of walls) {
+            if (hitTestRectangle(cat, brick)) {
+                return true;
+            }
+        }
+        return false;
+    }
     let left = keyboard("ArrowLeft"),
         up = keyboard("ArrowUp"),
         right = keyboard("ArrowRight"),
@@ -184,45 +192,69 @@ app.loader.add(txts).load((loader, resources) => {
     
     left.press = () => {
         //Change the cat's velocity when the key is pressed
+        if (hitWall()) {
+            return;
+        }
         cat.vx = -5;
         cat.vy = 0;
     };
 
     left.release = () => {
         //Change the cat's velocity when the key is pressed
+        if (hitWall()) {
+            cat.x += 5;
+        }
         cat.vx = 0;
         cat.vy = 0;
     };
 
     right.press = () => {
         //Change the cat's velocity when the key is pressed
+        if (hitWall()) {
+            return;
+        }
         cat.vx = 5;
         cat.vy = 0;
     };
 
     right.release = () => {
         //Change the cat's velocity when the key is pressed
+        if (hitWall()) {
+            cat.x -= 5;
+        }
         cat.vx = 0;
         cat.vy = 0;
     };
     up.press = () => {
         //Change the cat's velocity when the key is pressed
+        if (hitWall()) {
+            return;
+        }
         cat.vx = 0;
         cat.vy = -5;
     };
 
     up.release = () => {
+        if (hitWall()) {
+            cat.y += 5;
+        }
         //Change the cat's velocity when the key is pressed
         cat.vx = 0;
         cat.vy = 0;
     };
     down.press = () => {
+        if (hitWall()) {
+            return;
+        }
         //Change the cat's velocity when the key is pressed
         cat.vx = 0;
         cat.vy = 5;
     };
 
     down.release = () => {
+        if (hitWall()) {
+            cat.y -= 5;
+        }
         //Change the cat's velocity when the key is pressed
         cat.vx = 0;
         cat.vy = 0;
@@ -230,6 +262,12 @@ app.loader.add(txts).load((loader, resources) => {
 
     // Listen for frame updates
     function gameLoop(delta) {
+        for (brick of walls) {
+            if (hitTestRectangle(cat, brick)) {
+                cat.vy = 0;
+                cat.vx = 0;
+            }
+        }
         cat.x += cat.vx;
         cat.y += cat.vy;
         if (cat.x < -cat.width) {
@@ -245,12 +283,7 @@ app.loader.add(txts).load((loader, resources) => {
             cat.y = -cat.height;
         }
 
-        for (brick of walls) {
-            if (hitTestRectangle(cat, brick)) {
-                cat.vy = 0;
-                cat.vx = 0;
-            }
-        }
+        
     }
 
     app.ticker.add((delta) => gameLoop(delta));
