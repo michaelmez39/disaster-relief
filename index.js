@@ -57,49 +57,49 @@ function hitTestRectangle(r1, r2) {
 
     //Define the variables we'll need to calculate
     let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
-  
+
     //hit will determine whether there's a collision
     hit = false;
-  
+
     //Find the center points of each sprite
     r1.centerX = r1.x + r1.width / 2;
     r1.centerY = r1.y + r1.height / 2;
     r2.centerX = r2.x + r2.width / 2;
     r2.centerY = r2.y + r2.height / 2;
-  
+
     //Find the half-widths and half-heights of each sprite
     r1.halfWidth = r1.width / 2;
     r1.halfHeight = r1.height / 2;
     r2.halfWidth = r2.width / 2;
     r2.halfHeight = r2.height / 2;
-  
+
     //Calculate the distance vector between the sprites
     vx = r1.centerX - r2.centerX;
     vy = r1.centerY - r2.centerY;
-  
+
     //Figure out the combined half-widths and half-heights
     combinedHalfWidths = r1.halfWidth + r2.halfWidth;
     combinedHalfHeights = r1.halfHeight + r2.halfHeight;
-  
+
     //Check for a collision on the x axis
     if (Math.abs(vx) < combinedHalfWidths) {
-  
+
       //A collision might be occurring. Check for a collision on the y axis
       if (Math.abs(vy) < combinedHalfHeights) {
-  
+
         //There's definitely a collision happening
         hit = true;
       } else {
-  
+
         //There's no collision on the y axis
         hit = false;
       }
     } else {
-  
+
       //There's no collision on the x axis
       hit = false;
     }
-  
+
     //`hit` will be either `true` or `false`
     return hit;
   };
@@ -116,14 +116,22 @@ const txts = [
 ]
 
 const board_maize = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1],
+  [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+  [1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+  [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1],
+  [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+  [0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+  [0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+  [1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 
 ];
 // load the texture we need
@@ -138,15 +146,18 @@ app.loader.add(txts).load((loader, resources) => {
         for (let j = 0; j < board_maize[i].length; j++) {
             if (board_maize[i][j] == 1) {
                 let brick = new PIXI.Sprite(resources.block.texture);
-                brick.y = i * 100;
-                brick.x = j * 100;
+                brick.width = 50;
+                brick.height = 50;
+                brick.y = i * 50;
+                brick.x = j * 50;
                 walls.push(brick);
                 console.log("brick x, brick y: " + brick.x + ", " + brick.y);
             }
         }
     }
-    const brickWidth =  100; //app.renderer.width / walls.length;
-    const brickHeight = 100; //app.renderer.height / walls[0].length;
+    const brickWidth =  50; //app.renderer.width / walls.length;
+    const brickHeight = 50; //app.renderer.height / walls[0].length;
+
 
     // Positioning and resizing
     bunny.x = app.renderer.width / 2;
@@ -161,14 +172,14 @@ app.loader.add(txts).load((loader, resources) => {
     cat.y = app.renderer.height / 2;
     cat.vx = 0;
     cat.vy = 0;
-    cat.width = cat.width /2;
-    cat.height = cat.height / 2;
+    cat.width = brickWidth - 1;
+    cat.height = brickHeight - 1;
 
     background.width = app.renderer.width;
     background.height = app.renderer.height;
 
     // Add sprites to scene
-    
+
     app.stage.addChild(background);
     for (brick of walls) {
         app.stage.addChild(brick);
@@ -191,7 +202,7 @@ app.loader.add(txts).load((loader, resources) => {
         right = keyboard("ArrowRight"),
         down = keyboard("ArrowDown");
 
-    
+
     left.press = () => {
         //Change the cat's velocity when the key is pressed
         if (hitWall()) {
@@ -285,10 +296,8 @@ app.loader.add(txts).load((loader, resources) => {
             cat.y = -cat.height;
         }
 
-        
+
     }
 
     app.ticker.add((delta) => gameLoop(delta));
 });
-
-
