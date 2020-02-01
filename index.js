@@ -110,8 +110,8 @@ wrapper.appendChild(app.view);
 
 const txts = [
     { name: 'bunny', url: 'bunny.png' },
-    { name: 'cat', url: 'cat.jpg' },
-    { name: 'background', url: 'background.jpeg' },
+    { name: 'cat', url: 'new_cat.png' },
+    { name: 'background', url: 'grass.jpg' },
     { name: 'block', url: 'block.png'}
 ]
 
