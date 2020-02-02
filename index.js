@@ -109,18 +109,20 @@ let wrapper = document.getElementById("wrapper");
 wrapper.appendChild(app.view);
 
 const txts = [
-    { name: 'bunny', url: 'bunny.png' },
-    { name: 'cat', url: 'new_cat.png' },
+    { name: 'cat_right', url: 'new_cat_r.png' },
+    { name: 'goal', url: 'goal.png' },
+    { name: 'cat_left', url: 'new_cat.png'},
     { name: 'background', url: 'grass.jpg' },
+    { name: 'blue', url: 'blue.png' },
     { name: 'block', url: 'block.png'}
 ]
 
-const board_maize = [
+let board_maize = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1],
-  [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+  [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 2, 0, 0, 1, 0, 0, 1],
   [1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1],
   [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1],
   [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
@@ -137,11 +139,11 @@ const board_maize = [
 // load the texture we need
 app.loader.add(txts).load((loader, resources) => {
     // Create Textures
-    const background = new PIXI.Sprite(resources.background.texture);
-    const bunny = new PIXI.Sprite(resources.bunny.texture);
-    const cat = new PIXI.Sprite(resources.cat.texture);
+    // const background = new PIXI.Sprite(resources.background.texture);
+    const cat = new PIXI.Sprite(resources.cat_right.texture);
 
     let walls = new Array();
+    let objectives = new Array();
     for (let i = 0; i < board_maize.length; i++) {
         for (let j = 0; j < board_maize[i].length; j++) {
             if (board_maize[i][j] == 1) {
@@ -151,52 +153,49 @@ app.loader.add(txts).load((loader, resources) => {
                 brick.y = i * 50;
                 brick.x = j * 50;
                 walls.push(brick);
-                console.log("brick x, brick y: " + brick.x + ", " + brick.y);
+                // console.log("brick x, brick y: " + brick.x + ", " + brick.y);
+            } else if (board_maize[i][j] == 2) {
+                let goal = new PIXI.Sprite(resources.goal.texture);
+                goal.width = 50;
+                goal.height = 50;
+                goal.y = i * 50;
+                goal.x = j * 50;
+                goal.visible = true;
+                objectives.push(goal);
+                // console.log("brick x, brick y: " + brick.x + ", " + brick.y);
             }
         }
     }
     const brickWidth =  50; //app.renderer.width / walls.length;
     const brickHeight = 50; //app.renderer.height / walls[0].length;
-
+    const dv = 3;
 
     // Positioning and resizing
-    bunny.x = app.renderer.width / 2;
-    bunny.y = app.renderer.height / 2;
-
-    bunny.width /= 5;
-    bunny.height /= 5;
-    bunny.anchor.x = 0.5;
-    bunny.anchor.y = 0.5;
-
+    
     cat.x = 0;
     cat.y = app.renderer.height / 2;
     cat.vx = 0;
     cat.vy = 0;
-    cat.width = brickWidth - 1;
-    cat.height = brickHeight - 1;
+    cat.width = brickWidth - 5;
+    cat.height = brickHeight - 5;
 
-    background.width = app.renderer.width;
-    background.height = app.renderer.height;
+    // background.width = app.renderer.width;
+    // background.height = app.renderer.height;
 
     // Add sprites to scene
 
-    app.stage.addChild(background);
+    // app.stage.addChild(background);
     for (brick of walls) {
         app.stage.addChild(brick);
     }
-    app.stage.addChild(bunny);
+    for (objective of objectives) {
+        app.stage.addChild(objective);
+    }
     app.stage.addChild(cat);
 
 
-    //Capture the keyboard arrow keys
-    function hitWall() {
-        for (brick of walls) {
-            if (hitTestRectangle(cat, brick)) {
-                return true;
-            }
-        }
-        return false;
-    }
+
+
     let left = keyboard("ArrowLeft"),
         up = keyboard("ArrowUp"),
         right = keyboard("ArrowRight"),
@@ -205,17 +204,18 @@ app.loader.add(txts).load((loader, resources) => {
 
     left.press = () => {
         //Change the cat's velocity when the key is pressed
+        cat.texture = resources.cat_left.texture;
         if (hitWall()) {
             return;
         }
-        cat.vx = -5;
+        cat.vx = -dv;
         cat.vy = 0;
     };
 
     left.release = () => {
         //Change the cat's velocity when the key is pressed
         if (hitWall()) {
-            cat.x += 5;
+            cat.x += dv;
         }
         cat.vx = 0;
         cat.vy = 0;
@@ -223,17 +223,18 @@ app.loader.add(txts).load((loader, resources) => {
 
     right.press = () => {
         //Change the cat's velocity when the key is pressed
+        cat.texture = resources.cat_right.texture;
         if (hitWall()) {
             return;
         }
-        cat.vx = 5;
+        cat.vx = dv;
         cat.vy = 0;
     };
 
     right.release = () => {
         //Change the cat's velocity when the key is pressed
         if (hitWall()) {
-            cat.x -= 5;
+            cat.x -= dv;
         }
         cat.vx = 0;
         cat.vy = 0;
@@ -244,12 +245,12 @@ app.loader.add(txts).load((loader, resources) => {
             return;
         }
         cat.vx = 0;
-        cat.vy = -5;
+        cat.vy = -dv;
     };
 
     up.release = () => {
         if (hitWall()) {
-            cat.y += 5;
+            cat.y += dv;
         }
         //Change the cat's velocity when the key is pressed
         cat.vx = 0;
@@ -261,42 +262,78 @@ app.loader.add(txts).load((loader, resources) => {
         }
         //Change the cat's velocity when the key is pressed
         cat.vx = 0;
-        cat.vy = 5;
+        cat.vy = dv;
     };
 
     down.release = () => {
         if (hitWall()) {
-            cat.y -= 5;
+            cat.y -= dv;
         }
         //Change the cat's velocity when the key is pressed
         cat.vx = 0;
         cat.vy = 0;
     };
 
-    // Listen for frame updates
-    function gameLoop(delta) {
+        //Capture the keyboard arrow keys
+    function hitWall() {
         for (brick of walls) {
             if (hitTestRectangle(cat, brick)) {
-                cat.vy = 0;
-                cat.vx = 0;
+                return true;
             }
         }
-        cat.x += cat.vx;
-        cat.y += cat.vy;
-        if (cat.x < -cat.width) {
-            cat.x = app.renderer.width;
-        }
-        if (cat.x > cat.width + app.renderer.width) {
-            cat.x = -cat.width;
-        }
-        if (cat.y < -cat.height) {
-            cat.y = app.renderer.height + cat.height;
-        }
-        if (cat.y > cat.height + app.renderer.height) {
-            cat.y = -cat.height;
-        }
+        return false;
+    }
 
+    function hitObjective() {
+        for (objective of objectives) {
+            if (hitTestRectangle(cat, objective) && objective.visible) {
+                console.log("x: " + Math.floor(objective.x / 50) + " y: " + Math.floor(objective.y / 50));
+                objective.visible = false;
+                return true;
+            }
+        }
+    }
+    
+    let state;
 
+    function question(delta) {
+        console.log("Got a question!")
+        state = gamePlay;
+    }
+
+    function gamePlay(delta) {
+            for (brick of walls) {
+                if (hitTestRectangle(cat, brick)) {
+                    cat.vy = 0;
+                    cat.vx = 0;
+                }
+            }
+            if (hitObjective()) {
+                state = question;
+            }
+
+            cat.x += cat.vx;
+            cat.y += cat.vy;
+            if (cat.x < -cat.width) {
+                cat.x = app.renderer.width;
+            }
+            if (cat.x > cat.width + app.renderer.width) {
+                cat.x = -cat.width;
+            }
+            if (cat.y < -cat.height) {
+                cat.y = app.renderer.height + cat.height;
+            }
+            if (cat.y > cat.height + app.renderer.height) {
+                cat.y = -cat.height;
+            }
+    }
+
+    
+
+    state = gamePlay;
+    // Listen for frame updates
+    function gameLoop(delta) {
+        state(delta);
     }
 
     app.ticker.add((delta) => gameLoop(delta));
